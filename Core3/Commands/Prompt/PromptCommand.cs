@@ -1,4 +1,5 @@
 ﻿using Core3.Commands.Prompt.Parsers;
+using Core3.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Threading;
@@ -43,17 +44,19 @@ namespace Core3.Commands.Prompt
         public sealed override async Task<CoreCommandResult> ExecuteAsync(CoreCommandContext context, CancellationToken cancellationToken)
         {
             var cmdletContext = CreateCmdletContext(context);
+            var error = context.GetError();
+            var input = context.GetInput();
+            var output = context.GetOutput();
 
             while (!cmdletContext.Exit)
             {
                 var promptText = GetPromptText(cmdletContext);
+                output.Write("{0} ", promptText);
+                var inputText = input.ReadLine().Trim();
 
-                Console.Write("{0} ", promptText);
-                var input = Console.ReadLine()?.Trim();
-
-                if (!string.IsNullOrEmpty(input))
+                if (!string.IsNullOrEmpty(inputText))
                 {
-                    if (this.Parser.TryParseInput(cmdletContext, input, out var parsedInput))
+                    if (this.Parser.TryParseInput(cmdletContext, inputText, out var parsedInput))
                     {
                         // Map input to cmdlet
                         if (this.GetCmdlets(cmdletContext).TryGetValue(parsedInput.CmdletName, out var cmdlet))
@@ -70,16 +73,16 @@ namespace Core3.Commands.Prompt
                             }
                             catch (Exception ex)
                             {
-                                Console.WriteLine(ex);
+                                error.WriteLine(ex.ToString());
                             }
                         }
                         else
                         {
-                            Console.WriteLine("'{0}' is not defined", parsedInput.CmdletName);
+                            error.WriteLine("'{0}' is not defined", parsedInput.CmdletName);
                         }
                     }
                     //TODO: config
-                    Console.WriteLine();
+                    output.WriteLine();
                 }
             }
 

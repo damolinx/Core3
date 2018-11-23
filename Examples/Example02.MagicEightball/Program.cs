@@ -7,9 +7,9 @@ namespace Example02.MagicEightball
     {
         static void Main(string[] args)
         {
-            var coreProgram = new CoreProgram()
-                .PushCommand(new AskCommand());
-            coreProgram.Execute(args);
+            new CoreProgram()
+                .PushCommand(new AskCommand())
+                .Execute(args);
         }
     }
 }

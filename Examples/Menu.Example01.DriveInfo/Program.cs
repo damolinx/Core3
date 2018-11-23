@@ -7,9 +7,9 @@ namespace Menu.Example01.DriveInfo
     {
         static void Main(string[] args)
         {
-            var coreProgram = new CoreProgram()
-                .PushCommand(new DrivesMenuCommand());
-            coreProgram.Execute(args);
+            new CoreProgram()
+                .PushCommand(new DrivesMenuCommand())
+                .Execute(args);
         }
     }
 }

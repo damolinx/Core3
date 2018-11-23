@@ -16,7 +16,7 @@ namespace Core3.Commands.Prompt.Cmdlets
             foreach (var cmdlet in cmdlets.OrderBy(kvp => kvp.Key, StringComparer.CurrentCultureIgnoreCase))
             {
                 var description = CommandDescriptionAttribute.GetDescription(cmdlet.Value.GetType()) ?? string.Empty;
-                Console.WriteLine("{0} {1}", cmdlet.Key.PadRight(columnWidth), description);
+                context.Output.WriteLine("{0} {1}", cmdlet.Key.PadRight(columnWidth), description);
             }
 
             return Task.FromResult(PromptCmdletResult.Empty);

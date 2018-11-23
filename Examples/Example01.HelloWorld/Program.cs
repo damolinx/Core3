@@ -7,10 +7,10 @@ namespace Example01.HelloWorld
     {
         static void Main(string[] args)
         {
-            var coreProgram = new CoreProgram()
+            new CoreProgram()
                 .PushCommand(new SayCommand("Hello there!"))
-                .PushCommand(new SayCommand("Hello world!"));
-            coreProgram.Execute(args);
+                .PushCommand(new SayCommand("Hello world!"))
+                .Execute(args);
         }
     }
 }

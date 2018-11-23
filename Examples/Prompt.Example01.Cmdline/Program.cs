@@ -1,6 +1,5 @@
 ﻿using Core3;
 using Core3.Extensions;
-using System;
 
 namespace Prompt.Example01.Cmdline
 {
@@ -8,9 +7,9 @@ namespace Prompt.Example01.Cmdline
     {
         static void Main(string[] args)
         {
-            var program = new CoreProgram()
-                .PushCommand(new CmdPromptCommand());
-            program.Execute(args);
+            new CoreProgram()
+                .PushCommand(new CmdPromptCommand())
+                .Execute(args);
         }
     }
 }
