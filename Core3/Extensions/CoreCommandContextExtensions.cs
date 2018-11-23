@@ -5,6 +5,11 @@ namespace Core3.Extensions
 {
     public static class CoreCommandContextExtensions
     {
+        public static ICoreErrorOutput GetError(this CoreCommandContext context)
+        {
+            return context.ServiceProvider.GetService<ICoreErrorOutput>();
+        }
+
         public static ICoreInput GetInput(this CoreCommandContext context)
         {
             return context.ServiceProvider.GetService<ICoreInput>();

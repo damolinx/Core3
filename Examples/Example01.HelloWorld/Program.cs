@@ -8,8 +8,8 @@ namespace Example01.HelloWorld
         static void Main(string[] args)
         {
             var coreProgram = new CoreProgram()
-                .AddCommand(new SayCommand("Hello there!"))
-                .AddCommand(new SayCommand("Hello world!"));
+                .PushCommand(new SayCommand("Hello there!"))
+                .PushCommand(new SayCommand("Hello world!"));
             coreProgram.Execute(args);
         }
     }

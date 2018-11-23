@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Core3
 {
-    public class CoreConsole : ICoreInput, ICoreOutput
+    public class CoreConsole : ICoreInput, ICoreErrorOutput, ICoreOutput
     {
         public static CoreConsole Instance { get; } = new CoreConsole();
 
@@ -14,12 +14,12 @@ namespace Core3
             Console.OutputEncoding = Encoding.UTF8;
         }
 
-        public ConsoleKeyInfo ReadKey(bool intercept = false)
+        ConsoleKeyInfo ICoreInput.ReadKey(bool intercept = false)
         {
             return Console.ReadKey(intercept);
         }
 
-        public string ReadLine(bool trim = true)
+        string ICoreInput.ReadLine(bool trim = true)
         {
             var input = Console.ReadLine();
             return (input != null)
@@ -27,19 +27,37 @@ namespace Core3
                 : string.Empty;
         }
 
-        public ICoreOutput Write(string format, params object[] args)
+        ICoreErrorOutput ICoreErrorOutput.Write(string format, params object[] args)
+        {
+            Console.Error.Write(format, args);
+            return this;
+        }
+
+        ICoreErrorOutput ICoreErrorOutput.WriteLine()
+        {
+            Console.Error.WriteLine();
+            return this;
+        }
+
+        ICoreErrorOutput ICoreErrorOutput.WriteLine(string format, params object[] args)
+        {
+            Console.Error.WriteLine(format, args);
+            return this;
+        }
+
+        ICoreOutput ICoreOutput.Write(string format, params object[] args)
         {
             Console.Write(format, args);
             return this;
         }
 
-        public ICoreOutput WriteLine()
+        ICoreOutput ICoreOutput.WriteLine()
         {
             Console.WriteLine();
             return this;
         }
 
-        public ICoreOutput WriteLine(string format, params object[] args)
+        ICoreOutput ICoreOutput.WriteLine(string format, params object[] args)
         {
             Console.WriteLine(format, args);
             return this;

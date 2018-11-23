@@ -40,11 +40,12 @@ namespace Core3
 
         protected virtual IServiceProvider CreateServiceProvider()
         {
-            var serviceProvider = new CoreServiceProvider();
-            serviceProvider.AddSingleton<CoreProgram>(this);
-            serviceProvider.AddSingleton<ICoreInput>(CoreConsole.Instance);
-            serviceProvider.AddSingleton<ICoreOutput>(CoreConsole.Instance);
-            serviceProvider.AddSingleton<ILogger>(NullLogger.Instance);
+            var serviceProvider = new CoreServiceProvider()
+                .AddSingleton<CoreProgram>(this)
+                .AddSingleton<ICoreInput>(CoreConsole.Instance)
+                .AddSingleton<ICoreErrorOutput>(CoreConsole.Instance)
+                .AddSingleton<ICoreOutput>(CoreConsole.Instance)
+                .AddSingleton<ILogger>(NullLogger.Instance);
             return serviceProvider;
         }
 

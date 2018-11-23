@@ -20,10 +20,12 @@ namespace Core3.Commands.Menu
             {
                 new MenuEntry(ConsoleKey.D0, backLabel ?? Resources.MenuBack)
                 {
-                    Command = BackCommand.Instance
+                    Command = new BackCommand(this)
                 }
             };
         }
+
+        public bool Complete { get; internal set; }
 
         public IList<MenuEntry> MenuEntries { get; }
 
@@ -35,25 +37,20 @@ namespace Core3.Commands.Menu
 
         public override Task<CoreCommandResult> ExecuteAsync(CoreCommandContext context, CancellationToken cancellationToken)
         {
-            var commandComplete = false;
-            var menuEntries = GetMenuEntries(context);
-
-            RenderHeader(context);
-            RenderMenu(context, menuEntries);
-
-            var entryCommand = WaitForEntry(context, menuEntries)
-                .GetCommand(context);
-
-            if (entryCommand is BackCommand)
+            if (!this.Complete)
             {
-                commandComplete = true;
-            }
-            else
-            {
-                context.GetProgram().AddCommand(entryCommand);
+                var menuEntries = GetMenuEntries(context);
+
+                RenderHeader(context);
+                RenderMenu(context, menuEntries);
+
+                var entryCommand = WaitForEntry(context, menuEntries)
+                    .GetCommand(context);
+
+                context.GetProgram().PushCommand(entryCommand);
             }
 
-            return Task.FromResult(new CoreCommandResult { Complete = commandComplete });
+            return Task.FromResult(new CoreCommandResult { Complete = Complete });
         }
 
         protected virtual void RenderHeader(CoreCommandContext context)
