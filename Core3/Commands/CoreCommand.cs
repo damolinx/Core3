@@ -10,6 +10,8 @@ namespace Core3.Commands
 
         public bool RequiresClearScreen { get; set; }
 
+        public bool RequiresExitPause { get; set; }
+
         public abstract Task<CoreCommandResult> ExecuteAsync(CoreCommandContext context, CancellationToken cancellationToken);
 
         public virtual CoreCommandHandledExceptionResult HandleException(Exception ex)

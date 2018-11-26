@@ -126,4 +126,7 @@
   <data name="MenuBack" xml:space="preserve">
     <value>Back</value>
   </data>
+  <data name="PressAnyKeyToContinue" xml:space="preserve">
+    <value>Press any key to continue ...</value>
+  </data>
 </root>

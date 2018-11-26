@@ -106,6 +106,12 @@ namespace Core3
                         var message = string.Format(CultureInfo.CurrentUICulture, Resources.CommandStackUnexpectedState_2, command, topCommand);
                         throw new InvalidOperationException(message);
                     }
+
+                    if (command.RequiresExitPause)
+                    {
+                        Console.WriteLine(Resources.PressAnyKeyToContinue);
+                        Console.ReadKey(intercept: true);
+                    }
                 }
             }
         }

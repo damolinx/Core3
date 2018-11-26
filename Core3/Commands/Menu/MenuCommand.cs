@@ -13,10 +13,10 @@ namespace Core3.Commands.Menu
     {
         private string _title;
 
-        public MenuCommand(string title, string backLabel = null, params MenuEntry[] menuEntries)
+        public MenuCommand(string title, string backLabel = null)
         {
             Title = title;
-            MenuEntries = new List<MenuEntry>(menuEntries)
+            MenuEntries = new List<MenuEntry>
             {
                 new MenuEntry(ConsoleKey.D0, backLabel ?? Resources.MenuBack)
                 {

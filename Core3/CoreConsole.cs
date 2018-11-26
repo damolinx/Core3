@@ -14,12 +14,12 @@ namespace Core3
             Console.OutputEncoding = Encoding.UTF8;
         }
 
-        ConsoleKeyInfo ICoreInput.ReadKey(bool intercept = false)
+        public ConsoleKeyInfo ReadKey(bool intercept = false)
         {
             return Console.ReadKey(intercept);
         }
 
-        string ICoreInput.ReadLine(bool trim = true)
+        public string ReadLine(bool trim = true)
         {
             var input = Console.ReadLine();
             return (input != null)
@@ -42,6 +42,17 @@ namespace Core3
         ICoreErrorOutput ICoreErrorOutput.WriteLine(string format, params object[] args)
         {
             Console.Error.WriteLine(format, args);
+            return this;
+        }
+
+        (int left, int top) ICoreOutput.GetCursorPosition()
+        {
+            return (left: Console.CursorLeft, top: Console.CursorTop);
+        }
+
+        ICoreOutput ICoreOutput.SetCursorPosition((int left, int top) position)
+        {
+            Console.SetCursorPosition(position.left, position.top);
             return this;
         }
 

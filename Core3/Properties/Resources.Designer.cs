@@ -86,5 +86,14 @@ namespace Core3.Properties {
                 return ResourceManager.GetString("MenuBack", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Press any key to continue ....
+        /// </summary>
+        internal static string PressAnyKeyToContinue {
+            get {
+                return ResourceManager.GetString("PressAnyKeyToContinue", resourceCulture);
+            }
+        }
     }
 }
