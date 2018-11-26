@@ -29,44 +29,71 @@ namespace Core3.Utilities.TextControls
 
         protected override void InnerRender(ICoreOutput output)
         {
-            var percentageText = string.Empty;
-            var width = this.Width;
-
             if (ShowPercentage)
             {
-                percentageText = (Value / (double)Maximum).ToString("P1").PadLeft(6);
-                width -= (percentageText.Length + 1);
+                InnerRenderWithPercentage(output);
             }
+            else
+            {
+                InnerRenderBare(output);
+            }
+        }
+
+        private void InnerRenderBare(ICoreOutput output)
+        {
+            var completeText = string.Empty;
+            var remainingText = string.Empty;
 
             if (Value <= Minimum)
             {
-                output
-                    .SetCursorPosition((left: Left, top: Top))
-                    .Write(new string(BackgroundCharacter, width));
+                remainingText = new string(BackgroundCharacter, Width);
             }
             else if (Value >= Maximum)
             {
-                output
-                    .SetCursorPosition((left: Left, top: Top))
-                    .Write(new string(ForegroundCharacter, width));
+                completeText = new string(ForegroundCharacter, Width);
+            }
+            else
+            {
+                var scale = (Maximum - Minimum) / (double)Width;
+                var complete = (int)(Value / scale);
+                var remaining = (int)((Maximum / scale) - complete);
+                completeText = new string(ForegroundCharacter, complete);
+                remainingText = new string(BackgroundCharacter, remaining);
+            }
+
+            output
+                .Write((left: Left, top: Top), completeText)
+                .Write((left: Left + completeText.Length, top: Top), remainingText);
+        }
+
+        private void InnerRenderWithPercentage(ICoreOutput output)
+        {
+            var percentageText = (Value / (double)Maximum).ToString("P1").PadLeft(6);
+            var width = this.Width - (percentageText.Length + 1);
+            var completeText = string.Empty;
+            var remainingText = string.Empty;
+
+            if (Value <= Minimum)
+            {
+                remainingText = new string(BackgroundCharacter, width);
+            }
+            else if (Value >= Maximum)
+            {
+                completeText = new string(ForegroundCharacter, width);
             }
             else
             {
                 var scale = (Maximum - Minimum) / (double)width;
                 var complete = (int)(Value / scale);
                 var remaining = (int)((Maximum / scale) - complete);
-                output
-                    .SetCursorPosition((left: Left, top: Top))
-                    .Write(new string(ForegroundCharacter, complete))
-                    .Write(new string(BackgroundCharacter, remaining));
+                completeText = new string(ForegroundCharacter, complete);
+                remainingText = new string(BackgroundCharacter, remaining);
             }
 
-            if (ShowPercentage)
-            {
-                output
-                    .Write(" ")
-                    .Write(percentageText);
-            }
+            output
+                .Write((left: Left, top: Top), completeText)
+                .Write((left: Left + completeText.Length, top: Top), remainingText)
+                .Write((left: Left + completeText.Length + remainingText.Length, top: Top), " {0}", percentageText);
         }
     }
 }

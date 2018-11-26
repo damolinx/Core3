@@ -6,10 +6,13 @@ namespace Core3
 {
     public class CoreConsole : ICoreInput, ICoreErrorOutput, ICoreOutput
     {
-        public static CoreConsole Instance { get; } = new CoreConsole();
+        public static readonly CoreConsole Instance = new CoreConsole();
+
+        private readonly object _outputLock;
 
         private CoreConsole()
         {
+            _outputLock = new object();
             Console.InputEncoding = Encoding.UTF8;
             Console.OutputEncoding = Encoding.UTF8;
         }
@@ -47,31 +50,48 @@ namespace Core3
 
         (int left, int top) ICoreOutput.GetCursorPosition()
         {
-            return (left: Console.CursorLeft, top: Console.CursorTop);
+            lock (_outputLock)
+            {
+                return (left: Console.CursorLeft, top: Console.CursorTop);
+            }
         }
 
         ICoreOutput ICoreOutput.SetCursorPosition((int left, int top) position)
         {
-            Console.SetCursorPosition(position.left, position.top);
-            return this;
+            lock (_outputLock)
+            {
+                Console.SetCursorPosition(position.left, position.top);
+                return this;
+            }
         }
 
         ICoreOutput ICoreOutput.Write(string format, params object[] args)
         {
-            Console.Write(format, args);
-            return this;
+            lock (_outputLock)
+            {
+                Console.Write(format, args);
+                return this;
+            }
+        }
+
+        ICoreOutput ICoreOutput.Write((int left, int top) position, string format, params object[] args)
+        {
+            lock (_outputLock)
+            {
+                Console.SetCursorPosition(position.left, position.top);
+                Console.Write(format, args);
+                return this;
+            }
         }
 
         ICoreOutput ICoreOutput.WriteLine()
         {
-            Console.WriteLine();
-            return this;
+            return ((ICoreOutput)this).Write(Environment.NewLine);
         }
 
         ICoreOutput ICoreOutput.WriteLine(string format, params object[] args)
         {
-            Console.WriteLine(format, args);
-            return this;
+            return ((ICoreOutput)this).Write(format + Environment.NewLine, args);
         }
     }
 }

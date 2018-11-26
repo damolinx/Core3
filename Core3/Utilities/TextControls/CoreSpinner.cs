@@ -1,6 +1,9 @@
 ﻿using Core3.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Core3.Utilities.TextControls
 {
@@ -21,19 +24,16 @@ namespace Core3.Utilities.TextControls
         protected override void InnerRender(ICoreOutput output)
         {
             _frame = (_frame + 1) % AnimationSequence.Count();
-            output
-                .SetCursorPosition((left: this.Left, top: this.Top))
-                .Write(AnimationSequence.ElementAt(_frame).ToString());
+            output.Write((left: Left, top: Top), AnimationSequence.ElementAt(_frame).ToString());
         }
 
-        //TODO: DO NOT enable until Output is locked / scoped / other
-        //public async Task StartAsync(ICoreOutput output, TimeSpan delay, CancellationToken cancellationToken)
-        //{
-        //    while (!cancellationToken.IsCancellationRequested)
-        //    {
-        //        Render(output);
-        //        await Task.Delay(delay, cancellationToken);
-        //    }
-        //}
+        public async Task StartAsync(ICoreOutput output, TimeSpan delay, CancellationToken cancellationToken)
+        {
+            while (!cancellationToken.IsCancellationRequested)
+            {
+                Render(output);
+                await Task.Delay(delay, cancellationToken);
+            }
+        }
     }
 }

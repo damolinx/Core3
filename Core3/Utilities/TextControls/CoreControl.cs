@@ -23,9 +23,7 @@ namespace Core3.Utilities.TextControls
             var position = output.GetCursorPosition();
             try
             {
-                output
-                    .SetCursorPosition((left: Left, top: Top))
-                    .Write(new string(' ', this.Width));
+                output.Write((left: Left, top: Top), new string(' ', this.Width));
             }
             finally
             {

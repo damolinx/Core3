@@ -8,6 +8,8 @@
 
         ICoreOutput Write(string format, params object[] args);
 
+        ICoreOutput Write((int left, int top) position, string format, params object[] args);
+
         ICoreOutput WriteLine();
 
         ICoreOutput WriteLine(string format, params object[] args);
